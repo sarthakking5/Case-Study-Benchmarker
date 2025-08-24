@@ -79,3 +79,105 @@ case_study_benchmarker/
 ### Notes
 - `time` may be null (missing /invalid in raw uploads is tolerated)
 - Critical IDs (JobID, OperationID, MachineID) are required; rows missing these are dropped during CSV processing.
+
+## 📥 Input Data Formats
+
+### CSV (expected columns)
+``` python-repl
+JobID,OperationID,MachineID,ProcessingTime
+J1,O1,M1,10
+J1,O1,M2,12
+J1,O2,M1,8
+...
+```
+### Flexible JSON (auto normalized)
+Matches `data/sample_case.json (both standardized and loose formats are accepted).
+
+## ⚙️ Installation
+``` bash
+# from repo root
+python -m venv venv
+# Windows
+venv\Scripts\activate
+# macOS/Linux
+source venv/bin/activate
+
+pip install -r requirements.txt
+```
+## How to Run(CLI)
+All commands are run from repo root. The CLI lives at `environment/runner.py`.
+
+### 1) Standardize raw CSV/JSON
+
+``` bash 
+python environment/runner.py standardize data/sample_case.csv --case_id TestCase_001
+# or
+python environment/runner.py standardize data/sample_case.json --case_id TestCase_JSON
+```
+Outputs a validated JSON case at:
+`data/standardized/<case_id>.json`
+
+### 2) List standardized cases
+```bash
+python environment/runner.py list
+```
+### 3) Run baselines on a case
+``` bash 
+python environment/runner.py run data/standardized/TestCase_001.json
+```
+#### Example output:
+```lua 
+solver                 makespan    num_tasks
+-------------------  ----------  ----------
+RandomSolver               17.00           4
+GreedyMinProcTime          12.00           4
+ORToolsHeuristic(min-time) 12.00           4
+```
+
+## 🔄 End-to-End (one command)
+Use the included pipeline script (it ensures the venv python is used):
+``` bash
+python examples/run_full_pipeline.py
+```
+### Example Output 
+``` lua
+➡️  Step 1: Standardizing raw CSV/JSON...
+✅ Saved standardized case: data\standardized\TestCase_FullPipeline.json
+
+➡️  Step 2: Listing standardized cases...
+case_path
+--------------------------------------------
+data\standardized\MyTestCase.json
+data\standardized\TestCase_FullPipeline.json
+
+➡️  Step 3: Running baseline solvers on data/standardized/TestCase_FullPipeline.json...
+solver                        makespan    num_tasks
+--------------------------  ----------  -----------
+RandomSolver                     12.00            4
+GreedyMinProcTime                12.00            4
+ORToolsHeuristic(min-time)       12.00            4
+```
+
+## 🧠 Adding Your Own Solver
+``` python
+# my_solver.py
+def solve(case: dict) -> dict:
+    assignments = []
+    for job in case["jobs"]:
+        for op in job["operations"]:
+            # pick any machine you want (heuristics/ML/CP-SAT)
+            chosen = min(
+                [m for m in op["machines"] if m["time"] is not None],
+                key=lambda m: m["time"],
+                default=None
+            )
+            if chosen:
+                assignments.append({
+                    "job_id": job["job_id"],
+                    "operation_id": op["operation_id"],
+                    "machine_id": chosen["id"]
+                })
+    return {"name": "MySolver", "assignments": assignments}
+```
+
+ 
