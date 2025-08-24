@@ -13,7 +13,7 @@ A template framework to standardize manufacturing datasets (e.g., FJSSP), create
 - ✅ Ready for researchers to plug in custom algorithms
 
 ## 📦 Repository Structure
-graphql `
+ ```
 
 case_study_benchmarker/
 │── README.md
@@ -49,4 +49,4 @@ case_study_benchmarker/
 │
 └── examples/
     └── run_full_pipeline.py # end-to-end demo using the CLI internally
-`
+```
