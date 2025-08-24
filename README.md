@@ -211,3 +211,5 @@ The simulator in `solvers/evaluator.py`:
 - Multi-objective KPIs (tardiness, flow time)
 - Streamlit UI for drag-and-drop + live KPIs
 - Docker image for zero-setup reproduction
+
+### Questions or issues? Open an issue or ping the maintainer. Happy benchmarking! 🎯
