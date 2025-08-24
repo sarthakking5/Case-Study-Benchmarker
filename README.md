@@ -76,3 +76,6 @@ case_study_benchmarker/
 }
 
 ```
+### Notes
+- `time` may be null (missing /invalid in raw uploads is tolerated)
+- Critical IDs (JobID, OperationID, MachineID) are required; rows missing these are dropped during CSV processing.
