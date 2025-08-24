@@ -180,4 +180,34 @@ def solve(case: dict) -> dict:
     return {"name": "MySolver", "assignments": assignments}
 ```
 
- 
+ Evaluate it:
+``` python 
+from environment.benchmark_env import BenchmarkEnv
+env = BenchmarkEnv("data/standardized/TestCase_001.json")
+print(env.run_custom_solver(lambda c: solve(c)))
+```
+
+##  📊 What the Evaluator Computes
+
+The simulator in `solvers/evaluator.py`:
+
+- Enforces job precedence (O1 → O2 → … within a job)
+- Unary machine capacity (one operation at a time)
+- Computes start/finish times, makespan, and machine utilization
+- Ignores operations with missing processing time (`time=None`)
+
+## 🧾 Characteristics of This Repository
+
+- Reproducible: All standardized cases follow a single schema (Pydantic validated).
+- Extensible: Add new solvers by implementing a `solve(case) -> {"name", "assignments": [...]}` function.
+- Practical: Baselines + simulation give instant KPIs (makespan/utilization).
+- Robust to messy data: Missing `ProcessingTime` handled as None; invalid rows dropped if they lack IDs.
+- Research-friendly: Exporters/registry make it easy to share case studies and compare algorithms.
+
+## Roadmap 
+
+- CP-SAT/OR-Tools full FJSSP model
+- Stochastic processing times & robustness tests
+- Multi-objective KPIs (tardiness, flow time)
+- Streamlit UI for drag-and-drop + live KPIs
+- Docker image for zero-setup reproduction
