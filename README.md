@@ -50,3 +50,29 @@ case_study_benchmarker/
 └── examples/
     └── run_full_pipeline.py # end-to-end demo using the CLI internally
 ```
+## 🧱 Standardized Data Schema (Pydantic)
+json ```
+{
+  "case_id": "string",
+  "metadata": {
+    "source": "string",
+    "objective": "Minimize Makespan",
+    "created_by": "Campus Heilbronn"
+  },
+  "jobs": [
+    {
+      "job_id": "J1",
+      "operations": [
+        {
+          "operation_id": "O1",
+          "machines": [
+            { "id": "M1", "time": 10.0 },
+            { "id": "M2", "time": 12.0 }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+```
