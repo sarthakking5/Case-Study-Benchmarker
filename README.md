@@ -51,7 +51,7 @@ case_study_benchmarker/
     └── run_full_pipeline.py # end-to-end demo using the CLI internally
 ```
 ## 🧱 Standardized Data Schema (Pydantic)
-json ```
+```
 {
   "case_id": "string",
   "metadata": {
